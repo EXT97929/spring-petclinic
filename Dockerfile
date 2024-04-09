@@ -27,6 +27,5 @@ USER nonroot:nonroot
 
 WORKDIR /app
 
-RUN mv *.jar app.jar
-ADD app.jar app.jar
-CMD ["/bin/sh", "-c", "java ${DEFAULT_OPTS} -jar app.jar -XX:+UseShenandoahGC"]
+COPY spring-petclinic-3.2.0-SNAPSHOT.jar app.jar
+CMD ["/bin/sh", "-c", "java ${DEFAULT_OPTS} -jar app.jar"]
