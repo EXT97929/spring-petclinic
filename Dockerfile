@@ -27,5 +27,5 @@ USER nonroot:nonroot
 
 WORKDIR /app
 
-COPY spring-petclinic-3.2.0-SNAPSHOT.jar app.jar
+COPY target/spring-petclinic-3.2.0-SNAPSHOT.jar app.jar
 CMD ["/bin/sh", "-c", "java ${DEFAULT_OPTS} -jar app.jar"]
