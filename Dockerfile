@@ -3,11 +3,11 @@ FROM eclipse-temurin:21-jre
 # Defaults
 ENV DEFAULT_OPTS="-XX:MaxRAMPercentage=95 -XshowSettings:vm"
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get -y install vim bash curl && \
-    apt-get autoremove -y && \
-    apt-get clean
+# RUN apt-get update && \
+#     apt-get upgrade -y && \
+#     apt-get -y install vim bash curl && \
+#     apt-get autoremove -y && \
+#     apt-get clean
 
 ARG APP_NAME
 ARG APP_VERSION
