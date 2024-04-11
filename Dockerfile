@@ -9,9 +9,7 @@ ENV DEFAULT_OPTS="-XX:MaxRAMPercentage=95 -XshowSettings:vm"
 #     apt-get autoremove -y && \
 #     apt-get clean
 
-ARG APP_NAME
-ARG APP_VERSION
-ARG JAR_FILE="target/${APP_NAME}-${APP_VERSION}.jar"
+ARG JAR_FILE=target/*.jar
 
 EXPOSE 8080
 
@@ -19,13 +17,11 @@ RUN groupadd --gid 65532 nonroot
 RUN useradd --uid 65532 --gid 65532 -m -d /home/nonroot nonroot
 
 RUN mkdir /app
-RUN mkdir /app/logs
 RUN chown -R nonroot:nonroot /app
-RUN chown -R nonroot:nonroot /app/logs
 
 USER nonroot:nonroot
 
 WORKDIR /app
 
-COPY target/spring-petclinic-3.2.0-SNAPSHOT.jar app.jar
+COPY ${JAR_FILE} app.jar
 CMD ["/bin/sh", "-c", "java ${DEFAULT_OPTS} -jar app.jar"]
