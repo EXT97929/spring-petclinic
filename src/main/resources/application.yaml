@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: petclinic
+  main:
+    keep-alive: true
+  threads:
+    virtual:
+      enabled: true
   mvc:
     problemdetails:
       enabled: true
