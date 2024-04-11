@@ -34,7 +34,11 @@ spring:
 
 database: h2
 
+
 management:
+  health:
+    probes:
+      enabled: true
   endpoints:
     web:
       exposure:
