@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.springframework.samples</groupId>
-  <artifactId>spring-petclinic</artifactId>
-  <version>3.2.0-SNAPSHOT</version>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.2.1</version>
   </parent>
+  <groupId>org.springframework.samples</groupId>
+  <artifactId>spring-petclinic</artifactId>
+  <version>3.2.0-SNAPSHOT</version>
   <name>petclinic</name>
 
   <properties>
 
     <!-- Generic properties -->
-    <java.version>17</java.version>
+    <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Important for reproducible builds. Update using e.g. ./mvnw versions:set -DnewVersion=... -->
     <project.build.outputTimestamp>2023-05-10T07:42:50Z</project.build.outputTimestamp>
-
-    <!-- Web dependencies -->
-    <webjars-bootstrap.version>5.3.2</webjars-bootstrap.version>
-    <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
-
     <checkstyle.version>10.12.5</checkstyle.version>
     <jacoco.version>0.8.11</jacoco.version>
-    <libsass.version>0.2.29</libsass.version>
     <lifecycle-mapping>1.0.0</lifecycle-mapping>
     <maven-checkstyle.version>3.3.1</maven-checkstyle.version>
-    <nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
-    <spring-format.version>0.0.40</spring-format.version>
-
+    <checkstyle.version>8.44</checkstyle.version>
+    <checkstyle.configDir>${project.basedir}</checkstyle.configDir>
+    <spotless.version>2.43.0</spotless.version>
+    <spotless-enforcement-branch>origin/main</spotless-enforcement-branch>
   </properties>
 
   <dependencies>
@@ -61,12 +54,13 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-thymeleaf</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
     </dependency>
 
     <!-- Databases - Uses H2 by default -->
@@ -96,23 +90,12 @@
       <artifactId>caffeine</artifactId>
     </dependency>
 
-    <!-- Webjars -->
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>bootstrap</artifactId>
-      <version>${webjars-bootstrap.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>font-awesome</artifactId>
-      <version>${webjars-font-awesome.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
-      <scope>test</scope>
+      <optional>true</optional>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-testcontainers</artifactId>
@@ -142,6 +125,10 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins/>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -164,63 +151,11 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>io.spring.javaformat</groupId>
-        <artifactId>spring-javaformat-maven-plugin</artifactId>
-        <version>${spring-format.version}</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>validate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <!--<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven-checkstyle.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>${checkstyle.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.spring.nohttp</groupId>
-            <artifactId>nohttp-checkstyle</artifactId>
-            <version>${nohttp-checkstyle.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>nohttp-checkstyle-validation</id>
-            <phase>validate</phase>
-            <configuration>
-              <configLocation>src/checkstyle/nohttp-checkstyle.xml</configLocation>
-              <sourceDirectories>${basedir}</sourceDirectories>
-              <includes>**/*</includes>
-              <excludes>**/.git/**/*,**/.idea/**/*,**/target/**/,**/.flattened-pom.xml,**/*.class</excludes>
-              <propertyExpansion>
-                config_loc=${basedir}/src/checkstyle/
-              </propertyExpansion>
-            </configuration>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>-->
-     <!-- <plugin>
-        <groupId>org.graalvm.buildtools</groupId>
-        <artifactId>native-maven-plugin</artifactId>
-      </plugin>-->
-      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <executions>
           <execution>
-            <!-- Spring Boot Actuator displays build-related information 
+            <!-- Spring Boot Actuator displays build-related information
               if a META-INF/build-info.properties file is present -->
             <goals>
               <goal>build-info</goal>
@@ -236,26 +171,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- Spring Boot Actuator displays build-related information if a git.properties
         file is present at the classpath -->
       <plugin>
@@ -266,172 +181,213 @@
           <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-    </license>
-  </licenses>
-
-  <repositories>
-    <repository>
-      <id>spring-snapshots</id>
-      <name>Spring Snapshots</name>
-      <url>https://repo.spring.io/snapshot</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>spring-milestones</id>
-      <name>Spring Milestones</name>
-      <url>https://repo.spring.io/milestone</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>spring-snapshots</id>
-      <name>Spring Snapshots</name>
-      <url>https://repo.spring.io/snapshot</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>spring-milestones</id>
-      <name>Spring Milestones</name>
-      <url>https://repo.spring.io/milestone</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
   <profiles>
     <profile>
-      <id>css</id>
+      <id>checkstyle</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>unpack</id>
-                <?m2e execute onConfiguration,onIncremental?>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>org.webjars.npm</groupId>
-                      <artifactId>bootstrap</artifactId>
-                      <version>${webjars-bootstrap.version}</version>
-                    </artifactItem>
-                  </artifactItems>
-                  <outputDirectory>${project.build.directory}/webjars</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>com.gitlab.haynes</groupId>
-            <artifactId>libsass-maven-plugin</artifactId>
-            <version>${libsass.version}</version>
-            <executions>
-              <execution>
-                <phase>generate-resources</phase>
-                <?m2e execute onConfiguration,onIncremental?>
-                <goals>
-                  <goal>compile</goal>
-                </goals>
-              </execution>
-            </executions>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${maven-checkstyle.version}</version>
             <configuration>
-              <inputPath>${basedir}/src/main/scss/</inputPath>
-              <outputPath>${basedir}/src/main/resources/static/resources/css/</outputPath>
-              <includePath>
-                ${project.build.directory}/webjars/META-INF/resources/webjars/bootstrap/${webjars-bootstrap.version}/scss/</includePath>
+              <configLocation>google_checks.xml</configLocation>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <linkXRef>false</linkXRef>
+              <suppressionsLocation>${checkstyle.configDir}/checkstyle-suppressions.xml</suppressionsLocation>
+              <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
             </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>com.puppycrawl.tools</groupId>
+                <artifactId>checkstyle</artifactId>
+                <version>${checkstyle.version}</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>validate</id>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+                <phase>validate</phase>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
     </profile>
     <profile>
-      <id>m2e</id>
+      <id>spotless</id>
       <activation>
-        <property>
-          <name>m2e.version</name>
-        </property>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <build>
-        <pluginManagement>
-          <plugins>
-            <!-- This plugin's configuration is used to store Eclipse m2e settings 
-              only. It has no influence on the Maven build itself. -->
-            <plugin>
-              <groupId>org.eclipse.m2e</groupId>
-              <artifactId>lifecycle-mapping</artifactId>
-              <version>${lifecycle-mapping}</version>
-              <configuration>
-                <lifecycleMappingMetadata>
-                  <pluginExecutions>
-                    <pluginExecution>
-                      <pluginExecutionFilter>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <versionRange>[1,)</versionRange>
-                        <goals>
-                          <goal>check</goal>
-                        </goals>
-                      </pluginExecutionFilter>
-                      <action>
-                        <ignore />
-                      </action>
-                    </pluginExecution>
-                    <pluginExecution>
-                      <pluginExecutionFilter>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <versionRange>[1,)</versionRange>
-                        <goals>
-                          <goal>build-info</goal>
-                        </goals>
-                      </pluginExecutionFilter>
-                      <action>
-                        <ignore />
-                      </action>
-                    </pluginExecution>
-                    <pluginExecution>
-                      <pluginExecutionFilter>
-                        <groupId>io.spring.javaformat</groupId>
-                        <artifactId>spring-javaformat-maven-plugin</artifactId>
-                        <versionRange>[0,)</versionRange>
-                        <goals>
-                          <goal>validate</goal>
-                        </goals>
-                      </pluginExecutionFilter>
-                      <action>
-                        <ignore />
-                      </action>
-                    </pluginExecution>
-                  </pluginExecutions>
-                </lifecycleMappingMetadata>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <configuration>
+              <!-- optional: limit format enforcement to just the files changed by this feature branch -->
+              <ratchetFrom>${spotless-enforcement-branch}</ratchetFrom>
+              <formats>
+                <format>
+                  <!-- define the files to apply to -->
+                  <includes>
+                    <include>*.md</include>
+                    <include>.gitignore</include>
+                  </includes>
+                  <!-- define the steps to apply to those files -->
+                  <trimTrailingWhitespace/>
+                  <endWithNewline/>
+                  <indent>
+                    <tabs>true</tabs>
+                    <spacesPerTab>2</spacesPerTab>
+                  </indent>
+                </format>
+              </formats>
+              <pom>
+                <sortPom>
+                  <encoding>UTF-8</encoding>
+                  <!-- The encoding of the pom files -->
+                  <expandEmptyElements>false</expandEmptyElements>
+                </sortPom>
+                <!-- has its own section below -->
+              </pom>
+              <!-- define a language-specific format -->
+              <java>
+                <!-- no need to specify files, inferred automatically, but you can if you want -->
+                <importOrder/>
+                <!-- standard import order -->
+                <removeUnusedImports/>
+                <replaceRegex>
+                  <name>Remove wildcard imports</name>
+                  <searchRegex>import\s+[^\*\s]+\*;(\r\n|\r|\n)</searchRegex>
+                  <replacement>$1</replacement>
+                </replaceRegex>
+                <!-- self-explanatory -->
+                <toggleOffOn>
+                  <!-- exclude block of code from formatting -->
+                  <off>@formatter:off</off>
+                  <on>@formatter:on</on>
+                </toggleOffOn>
+                <cleanthat>
+                  <version>2.14</version>
+                  <sourceJdk>${java.version}</sourceJdk>
+                  <!-- optional. Default to ${maven.compiler.source} else '1.7' -->
+                  <mutators>
+                    <mutator>SafeAndConsensual</mutator>
+                    <!-- optional. Default to 'SafeAndConsensual' to include all mutators -->
+                  </mutators>
+                  <mutators>
+                    <!-- List of mutators: https://github.com/solven-eu/cleanthat/blob/master/MUTATORS.generated.MD -->
+                    <mutator>LiteralsFirstInComparisons</mutator>
+                    <!-- You may alternatively list the requested mutators -->
+                  </mutators>
+                </cleanthat>
+                <!-- apply a specific flavor of google-java-format -->
+                <googleJavaFormat>
+                  <style>GOOGLE</style>
+                </googleJavaFormat>
+                <formatAnnotations/>
+              </java>
+            </configuration>
+            <executions>
+              <execution>
+                <id>validate</id>
+                <goals>
+                  <goal>apply</goal>
+                </goals>
+                <phase>validate</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>jacoco</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>setup-jacoco</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>create-default-report</id>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+                <phase>test</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/jacocoreport</outputDirectory>
+                  <!-- This excludes are only for this template, but it can be modified or removed from developers.
+                  We decided to  exclude this packages or files because there was no significant implementation logic.
+                  If there were significant implementation logic, tests must be done -->
+                  <!--suppress UnresolvedMavenProperty -->
+                  <excludes>**/web/dto/**/*,
+                    **/web/api/**/*,
+                    **/VirtualEntityApplication.class,
+                    ${jacoco.extra-excludes}</excludes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.gmaven</groupId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>execute</goal>
+                </goals>
+                <phase>test</phase>
+                <configuration>
+                  <!--suppress UnresolvedMavenProperty -->
+                  <source>def reportFile = new File("target/jacocoreport/index.html")
+
+                    if (!reportFile.exists() || !reportFile.canRead()) {
+                      println "[JacocoPrinter] Skipped due to missing report file."
+                      return
+                    }
+
+                    reportFile.withReader('UTF-8') { reader -&gt;
+                      def html = getParser().parseText(reader.readLine())
+                      def totalRow = html.body.table.tfoot.tr
+                      def instructionMissed = totalRow.td[1]
+                      def instructionRatio = totalRow.td[2]
+                      def branchMissed = totalRow.td[3]
+                      def branchRatio = totalRow.td[4]
+                      println "[Coverage Results:] Instructions ${instructionRatio} (Missed ${instructionMissed})"
+                    }
+
+                    XmlSlurper getParser() {
+                      parser = new XmlSlurper()
+                      parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
+                      parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
+                      return parser
+                    }</source>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
   </profiles>

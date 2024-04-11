@@ -15,13 +15,6 @@
  */
 package org.springframework.samples.petclinic.owner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.core.style.ToStringCreator;
-import org.springframework.samples.petclinic.model.Person;
-import org.springframework.util.Assert;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,143 +25,123 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.samples.petclinic.model.Person;
+import org.springframework.util.Assert;
 
-/**
- * Simple JavaBean domain object representing an owner.
- *
- * @author Ken Krebs
- * @author Juergen Hoeller
- * @author Sam Brannen
- * @author Michael Isvy
- * @author Oliver Drotbohm
- */
+@Getter
+@Setter
 @Entity
 @Table(name = "owners")
 public class Owner extends Person {
 
-	@Column(name = "address")
-	@NotBlank
-	private String address;
+  @Setter
+  @Column(name = "address")
+  @NotBlank
+  private String address;
 
-	@Column(name = "city")
-	@NotBlank
-	private String city;
+  @Setter
+  @Column(name = "city")
+  @NotBlank
+  private String city;
 
-	@Column(name = "telephone")
-	@NotBlank
-	@Digits(fraction = 0, integer = 10)
-	private String telephone;
+  @Setter
+  @Column(name = "telephone")
+  @NotBlank
+  @Digits(fraction = 0, integer = 10)
+  private String telephone;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "owner_id")
-	@OrderBy("name")
-	private List<Pet> pets = new ArrayList<>();
+  @Getter
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "owner_id")
+  @OrderBy("name")
+  private List<Pet> pets = new ArrayList<>();
 
-	public String getAddress() {
-		return this.address;
-	}
+  public void addPet(Pet pet) {
+    if (pet.isNew()) {
+      getPets().add(pet);
+    }
+  }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+  /**
+   * Return the Pet with the given name, or null if none found for this Owner.
+   *
+   * @param name to test
+   * @return a pet if pet name is already in use
+   */
+  public Pet getPet(String name) {
+    return getPet(name, false);
+  }
 
-	public String getCity() {
-		return this.city;
-	}
+  /**
+   * Return the Pet with the given id, or null if none found for this Owner.
+   *
+   * @param id to test
+   * @return a pet if pet id is already in use
+   */
+  public Pet getPet(Integer id) {
+    for (Pet pet : getPets()) {
+      if (!pet.isNew()) {
+        Integer compId = pet.getId();
+        if (compId.equals(id)) {
+          return pet;
+        }
+      }
+    }
+    return null;
+  }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+  /**
+   * Return the Pet with the given name, or null if none found for this Owner.
+   *
+   * @param name to test
+   * @return a pet if pet name is already in use
+   */
+  public Pet getPet(String name, boolean ignoreNew) {
+    name = name.toLowerCase();
+    for (Pet pet : getPets()) {
+      String compName = pet.getName();
+      if (compName != null && compName.equalsIgnoreCase(name)) {
+        if (!ignoreNew || !pet.isNew()) {
+          return pet;
+        }
+      }
+    }
+    return null;
+  }
 
-	public String getTelephone() {
-		return this.telephone;
-	}
+  @Override
+  public String toString() {
+    return new ToStringCreator(this)
+        .append("id", this.getId())
+        .append("new", this.isNew())
+        .append("lastName", this.getLastName())
+        .append("firstName", this.getFirstName())
+        .append("address", this.address)
+        .append("city", this.city)
+        .append("telephone", this.telephone)
+        .toString();
+  }
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
+  /**
+   * Adds the given {@link Visit} to the {@link Pet} with the given identifier.
+   *
+   * @param petId the identifier of the {@link Pet}, must not be {@literal null}.
+   * @param visit the visit to add, must not be {@literal null}.
+   */
+  public void addVisit(Integer petId, Visit visit) {
 
-	public List<Pet> getPets() {
-		return this.pets;
-	}
+    Assert.notNull(petId, "Pet identifier must not be null!");
+    Assert.notNull(visit, "Visit must not be null!");
 
-	public void addPet(Pet pet) {
-		if (pet.isNew()) {
-			getPets().add(pet);
-		}
-	}
+    Pet pet = getPet(petId);
 
-	/**
-	 * Return the Pet with the given name, or null if none found for this Owner.
-	 * @param name to test
-	 * @return a pet if pet name is already in use
-	 */
-	public Pet getPet(String name) {
-		return getPet(name, false);
-	}
+    Assert.notNull(pet, "Invalid Pet identifier!");
 
-	/**
-	 * Return the Pet with the given id, or null if none found for this Owner.
-	 * @param id to test
-	 * @return a pet if pet id is already in use
-	 */
-	public Pet getPet(Integer id) {
-		for (Pet pet : getPets()) {
-			if (!pet.isNew()) {
-				Integer compId = pet.getId();
-				if (compId.equals(id)) {
-					return pet;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Return the Pet with the given name, or null if none found for this Owner.
-	 * @param name to test
-	 * @return a pet if pet name is already in use
-	 */
-	public Pet getPet(String name, boolean ignoreNew) {
-		name = name.toLowerCase();
-		for (Pet pet : getPets()) {
-			String compName = pet.getName();
-			if (compName != null && compName.equalsIgnoreCase(name)) {
-				if (!ignoreNew || !pet.isNew()) {
-					return pet;
-				}
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringCreator(this).append("id", this.getId())
-			.append("new", this.isNew())
-			.append("lastName", this.getLastName())
-			.append("firstName", this.getFirstName())
-			.append("address", this.address)
-			.append("city", this.city)
-			.append("telephone", this.telephone)
-			.toString();
-	}
-
-	/**
-	 * Adds the given {@link Visit} to the {@link Pet} with the given identifier.
-	 * @param petId the identifier of the {@link Pet}, must not be {@literal null}.
-	 * @param visit the visit to add, must not be {@literal null}.
-	 */
-	public void addVisit(Integer petId, Visit visit) {
-
-		Assert.notNull(petId, "Pet identifier must not be null!");
-		Assert.notNull(visit, "Visit must not be null!");
-
-		Pet pet = getPet(petId);
-
-		Assert.notNull(pet, "Invalid Pet identifier!");
-
-		pet.addVisit(visit);
-	}
-
+    pet.addVisit(visit);
+  }
 }

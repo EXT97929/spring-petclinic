@@ -1,0 +1,92 @@
+# database init, supports mysql too
+server:
+  port: 15000
+
+spring:
+  application:
+    name: petclinic
+  mvc:
+    problemdetails:
+      enabled: true
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+  sql:
+    init:
+      # SQL is written to be idempotent so this is safe
+      mode: always
+      schema-locations: classpath*:db/${database}/schema.sql
+      data-locations: classpath*:db/${database}/data.sql
+  jpa:
+    # JPA
+    hibernate:
+      ddl-auto: none
+    open-in-view: true
+  messages:
+    # Internationalization
+    basename: messages/messages
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+database: h2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: loggers, health, info
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+    info:
+      enabled: true
+    loggers:
+      enabled: true
+
+logging:
+  level:
+    # Logging
+    root: INFO
+    org.springframework: INFO
+    org.springframework.jdbc.datasource.init: DEBUG
+    # logging.level.org.springframework.web=DEBUG
+    # logging.level.org.springframework.context.annotation=TRACE
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost/petclinic}
+    username: ${MYSQL_USER:petclinic}
+    password: ${MYSQL_PASS:petclinic}
+    hikari:
+      pool-name: ${spring.application.name}-pool
+      maximum-pool-size: 2
+      minimum-idle: 1
+
+database: mysql
+
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost/petclinic}
+    username: ${POSTGRES_USER:petclinic}
+    password: ${POSTGRES_PASS:petclinic}
+    hikari:
+      pool-name: ${spring.application.name}-pool
+      maximum-pool-size: 2
+      minimum-idle: 1
+
+database: postgres

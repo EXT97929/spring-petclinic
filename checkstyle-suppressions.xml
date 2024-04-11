@@ -3,9 +3,11 @@
 		"-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
 		"https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
-	<suppress files="node_modules[\\/].*" checks=".*"/>
-	<suppress files="node[\\/].*" checks=".*"/>
-	<suppress files="build[\\/].*" checks=".*"/>
+	<suppress checks="MissingJavadocType"
+	          files="."/>
+	<suppress checks="MissingJavadocMethod"
+	          files="."/>
+	<suppress checks="SummaryJavadoc"
+	          files="."/>
 	<suppress files="target[\\/].*" checks=".*"/>
-	<suppress files=".+\.(jar|git|ico|p12|gif|jks|jpg|svg|log)" checks="NoHttp"/>
 </suppressions>

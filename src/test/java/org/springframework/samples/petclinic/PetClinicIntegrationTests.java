@@ -28,36 +28,34 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class PetClinicIntegrationTests {
 
-	@LocalServerPort
-	int port;
+  @LocalServerPort int port;
 
-	@Autowired
-	private VetRepository vets;
+  @Autowired private VetRepository vets;
 
-	@Autowired
-	private RestTemplateBuilder builder;
+  @Autowired private RestTemplateBuilder builder;
 
-	@Test
-	void testFindAll() throws Exception {
-		vets.findAll();
-		vets.findAll(); // served from cache
-	}
+  @Test
+  void testFindAll() throws Exception {
+    vets.findAll();
+    vets.findAll(); // served from cache
+  }
 
-	@Test
-	void testOwnerDetails() {
-		RestTemplate template = builder.rootUri("http://localhost:" + port).build();
-		ResponseEntity<String> result = template.exchange(RequestEntity.get("/owners/1").build(), String.class);
-		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-	}
+  @Test
+  void testOwnerDetails() {
+    RestTemplate template = builder.rootUri("http://localhost:" + port).build();
+    ResponseEntity<Owner> result =
+        template.exchange(RequestEntity.get("/api/owners/1").build(), Owner.class);
+    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
 
-	public static void main(String[] args) {
-		SpringApplication.run(PetClinicApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(PetClinicApplication.class, args);
+  }
 }
