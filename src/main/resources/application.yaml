@@ -1,6 +1,5 @@
-# database init, supports mysql too
 server:
-  port: 15000
+  port: 8080
 
 spring:
   application:
@@ -55,9 +54,19 @@ logging:
     root: INFO
     org.springframework: INFO
     org.springframework.jdbc.datasource.init: DEBUG
+    org.springframework.core.env.PropertySourcesPropertyResolver: WARN
+    org.springframework.boot.availability: WARN
     # logging.level.org.springframework.web=DEBUG
     # logging.level.org.springframework.context.annotation=TRACE
 
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+server:
+  port: 15000
 
 ---
 spring:
